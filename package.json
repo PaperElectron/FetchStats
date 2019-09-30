@@ -1,0 +1,28 @@
+{
+  "name": "fetch-stats",
+  "version": "0.0.0",
+  "description": "Wraps fetch with some useful stuff",
+  "main": "index.js",
+  "files": [
+    "index.d.ts",
+    "index.js.map",
+    "Readme.md",
+    "LICENCE"
+  ],
+  "scripts": {
+    "prepublishOnly": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jim Bulkowski <jim.b@paperelectron.com> (http://paperelectron.com)",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/lodash": "^4.14.141",
+    "@types/node": "^12.7.8",
+    "es6-promise": "^4.2.8",
+    "isomorphic-fetch": "^2.2.1",
+    "typescript": "^3.6.3"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15"
+  }
+}
