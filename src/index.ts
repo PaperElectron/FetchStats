@@ -10,7 +10,8 @@ let singleton = 0
 
 export interface FetchStat {
   error: null | Error,
-  response: null | Response
+  status: null | number
+  bodyText: null | string
   url: string,
   options: any
 }
@@ -58,7 +59,8 @@ class _FetchStats {
       let timer = setTimeout(() => {
         let err = new Error('Request timed out.')
         this.addStat('timeouts', {
-          response: null,
+          status: null,
+          bodyText: null,
           error: err,
           url,
           options
@@ -67,19 +69,21 @@ class _FetchStats {
       }, this.settings.timeout)
 
       fetch(url, options)
-        .then(async (response) => {
+        .then(async (response: Response) => {
           if(response.ok){
             this.addStat('ok', {
+              status: response.status,
+              bodyText: await response.text(),
               error: null,
-              response,
               url,
               options
             })
             return resolve(response)
           }
           this.addStat('notOk', {
+            status: response.status,
+            bodyText: await response.text(),
             error: null,
-            response,
             url,
             options
           })
@@ -87,8 +91,9 @@ class _FetchStats {
         })
         .catch((err) => {
           this.addStat('error', {
+            status: null,
+            bodyText: null,
             error: err,
-            response: null,
             url,
             options
           })
@@ -146,6 +151,7 @@ class _FetchStats {
       this.handler = handler
     }
   }
+
 }
 
 
