@@ -5,10 +5,17 @@
  * @license MIT {@link http://opensource.org/licenses/MIT}
  */
 
-import {take, isNumber, gte, isNull, isFunction, includes} from 'lodash/fp'
+import {take, isNumber, gte, isNull, isFunction, includes, omit} from 'lodash/fp'
 let singleton = 0
 
-interface GlobalStats {
+export interface FetchStat {
+  error: null | Error,
+  response: null | Response
+  url: string,
+  options: any
+}
+
+export interface GlobalStats {
   count: number,
   errors: number,
   ok: number,
@@ -17,7 +24,7 @@ interface GlobalStats {
   lastStat: any
 }
 
-interface ActiveStats {
+export interface ActiveStats {
   errors: any[],
   ok: any[],
   notOk: any[],
@@ -52,6 +59,7 @@ class _FetchStats {
         let err = new Error('Request timed out.')
         this.addStat('timeouts', {
           response: null,
+          error: err,
           url,
           options
         })
@@ -62,6 +70,7 @@ class _FetchStats {
         .then(async (response) => {
           if(response.ok){
             this.addStat('ok', {
+              error: null,
               response,
               url,
               options
@@ -69,6 +78,7 @@ class _FetchStats {
             return resolve(response)
           }
           this.addStat('notOk', {
+            error: null,
             response,
             url,
             options
@@ -77,6 +87,7 @@ class _FetchStats {
         })
         .catch((err) => {
           this.addStat('error', {
+            error: err,
             response: null,
             url,
             options
@@ -101,7 +112,10 @@ class _FetchStats {
 
   }
 
-  addStat(type, stat){
+  addStat(type: string, stat: FetchStat){
+    if(stat.options.body){
+      stat.options = omit('body', stat.options)
+    }
     this.globalStats.lastStat = stat
     this.globalStats.count = this.globalStats.count + 1
     let t = includes(type, ['errors', 'timeouts', 'ok', 'notOk']) ? type : (()=>{throw new Error(`${type} is incorrect`)})()
