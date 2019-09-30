@@ -1,6 +1,6 @@
 {
   "name": "fetch-stats",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Wraps fetch with some useful stuff",
   "main": "index.js",
   "files": [
