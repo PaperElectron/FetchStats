@@ -91,7 +91,7 @@ class _FetchStats {
           return resolve(response)
         })
         .catch((err) => {
-          this.addStat('error', {
+          this.addStat('errors', {
             status: null,
             bodyText: null,
             error: err,
