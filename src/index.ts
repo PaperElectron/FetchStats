@@ -66,6 +66,7 @@ class _FetchStats {
               url,
               options
             })
+            return resolve(response)
           }
           this.addStat('notOk', {
             response,
