@@ -5,7 +5,7 @@
  * @license MIT {@link http://opensource.org/licenses/MIT}
  */
 
-import {take, isNumber, gte, isNull, isFunction, includes, omit} from 'lodash/fp'
+import {take, isNumber, gte, isNull, isFunction, includes, omit, clone} from 'lodash/fp'
 let singleton = 0
 
 export interface FetchStat {
@@ -73,16 +73,17 @@ class _FetchStats {
           if(response.ok){
             this.addStat('ok', {
               status: response.status,
-              bodyText: await response.text(),
+              bodyText: null,
               error: null,
               url,
               options
             })
             return resolve(response)
           }
+          let clonedResponse = clone(response)
           this.addStat('notOk', {
             status: response.status,
-            bodyText: await response.text(),
+            bodyText: await clonedResponse.text(),
             error: null,
             url,
             options
